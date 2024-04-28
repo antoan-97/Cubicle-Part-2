@@ -14,7 +14,7 @@ router.post('/create', async (req, res) => {
         difficultyLevel,
     } = req.body;
 
-   await cubeManager.create({
+    await cubeManager.create({
         name,
         description,
         imageUrl,
@@ -30,8 +30,13 @@ router.get('/:cubeId/details', async (req, res) => {
     if (!cube) {
         return res.redirect('/404');
     }
-    
+
     res.render('details', { cube });
 });
+
+router.get('/:cubeId/attach-accessory', (req, res) => {
+
+    res.render('accessories/attach');
+})
 
 module.exports = router;
