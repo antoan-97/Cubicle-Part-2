@@ -4,6 +4,7 @@ const cubeManager = require('../managers/cubeManager');
 const accessoriesManager = require('../managers/accessoryManager');
 
 router.get('/create', (req, res) => {
+    console.log(req.user);
     res.render('create');
 });
 
