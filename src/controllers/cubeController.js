@@ -64,7 +64,11 @@ router.get('/:cubeId/delete' , async (req, res) => {
 router.post('/:cubeId/delete', async (req,res) =>{
     await cubeManager.delete(req.params.cubeId);
     res.redirect('/')
-})
+});
+
+router.get('/:cubeId/edit', (req,res) =>{
+    res.render('cube/edit');
+});
 
 
 module.exports = router;
