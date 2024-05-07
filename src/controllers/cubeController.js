@@ -66,8 +66,9 @@ router.post('/:cubeId/delete', async (req,res) =>{
     res.redirect('/')
 });
 
-router.get('/:cubeId/edit', (req,res) =>{
-    res.render('cube/edit');
+router.get('/:cubeId/edit', async (req,res) =>{
+    const cube = await cubeManager.getOne(req.params.cubeId).lean();
+    res.render('cube/edit', { cube });
 });
 
 
