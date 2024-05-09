@@ -68,7 +68,9 @@ router.post('/:cubeId/delete', async (req,res) =>{
 
 router.get('/:cubeId/edit', async (req,res) =>{
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
-    res.render('cube/edit', { cube });
+
+     const options = generateDifficultyOptions(cube.difficultyLevel);
+    res.render('cube/edit', { cube, options });
 });
 
 router.post('/:cubeId/edit', async (req,res) =>{
@@ -95,7 +97,7 @@ function generateDifficultyOptions(difficultyLevel) {
         selected: Number(difficultyLevel) === index+1
     }))
 
-    return option
+    return options
 }
 
 
