@@ -1,14 +1,15 @@
 const router = require('express').Router();
 
+const { itsAuth } = require('../middlewares/authMiddleware');
 const cubeManager = require('../managers/cubeManager');
 const accessoriesManager = require('../managers/accessoryManager');
 const { generateDifficultyOptions } = require('../utils/viewHelper');
 
-router.get('/create', (req, res) => {
+router.get('/create', itsAuth, (req, res) => {
     res.render('cube/create');
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create', itsAuth, async (req, res) => {
     const {
         name,
         description,
@@ -56,7 +57,7 @@ router.get('/:cubeId/details', async (req, res) => {
     }
 });
 
-router.get('/:cubeId/attach-accessory', async (req, res) => {
+router.get('/:cubeId/attach-accessory',itsAuth, async (req, res) => {
 
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
     const accessories = await accessoriesManager.getExceptThese(cube.accessories).lean();
@@ -65,7 +66,7 @@ router.get('/:cubeId/attach-accessory', async (req, res) => {
 
 })
 
-router.post('/:cubeId/attach-accessory', async (req, res) => {
+router.post('/:cubeId/attach-accessory', itsAuth, async (req, res) => {
     const { accessory: accessoryId } = req.body;
     const cubeId = req.params.cubeId;
 
@@ -74,7 +75,7 @@ router.post('/:cubeId/attach-accessory', async (req, res) => {
     res.redirect(`/cubes/${cubeId}/details`)
 })
 
-router.get('/:cubeId/delete', async (req, res) => {
+router.get('/:cubeId/delete', itsAuth, async (req, res) => {
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
 
     const options = generateDifficultyOptions(cube.difficultyLevel);
@@ -83,12 +84,12 @@ router.get('/:cubeId/delete', async (req, res) => {
 
 });
 
-router.post('/:cubeId/delete', async (req, res) => {
+router.post('/:cubeId/delete', itsAuth, async (req, res) => {
     await cubeManager.delete(req.params.cubeId);
     res.redirect('/')
 });
 
-router.get('/:cubeId/edit', async (req, res) => {
+router.get('/:cubeId/edit', itsAuth, async (req, res) => {
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
 
     if (cube.owner !== req.user._id) {
@@ -99,7 +100,7 @@ router.get('/:cubeId/edit', async (req, res) => {
     res.render('cube/edit', { cube, options });
 });
 
-router.post('/:cubeId/edit', async (req, res) => {
+router.post('/:cubeId/edit', itsAuth, async (req, res) => {
     const cubeData = req.body;
 
     await cubeManager.update(req.params.cubeId, cubeData);
