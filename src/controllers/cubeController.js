@@ -91,6 +91,10 @@ router.post('/:cubeId/delete', async (req, res) => {
 router.get('/:cubeId/edit', async (req, res) => {
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
 
+    if (cube.owner !== req.user._id) {
+        return res.redirect('/404');
+    }
+
     const options = generateDifficultyOptions(cube.difficultyLevel);
     res.render('cube/edit', { cube, options });
 });
