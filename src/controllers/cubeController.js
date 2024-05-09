@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const cubeManager = require('../managers/cubeManager');
 const accessoriesManager = require('../managers/accessoryManager');
+const {generateDifficultyOptions} = require('../utils/viewHelper');
 
 router.get('/create', (req, res) => {
     res.render('cube/create');
@@ -81,24 +82,6 @@ router.post('/:cubeId/edit', async (req,res) =>{
     res.redirect(`/cubes/${req.params.cubeId}/details`);
 })
 
-function generateDifficultyOptions(difficultyLevel) {
-    const titles = [
-        'Very Easy',
-        'Easy',
-        'Medium (Standart 3x3)',
-        'Intermediate',
-        'Expert',
-        'Hardcore',
-    ];
-
-    const options = titles.map((title,index) => ({
-        title: `${index + 1 } - ${title}`,
-        value: index + 1,
-        selected: Number(difficultyLevel) === index+1
-    }))
-
-    return options
-}
 
 
 module.exports = router;
