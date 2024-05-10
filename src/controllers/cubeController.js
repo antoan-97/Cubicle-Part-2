@@ -29,35 +29,18 @@ router.post('/create', itsAuth, async (req, res) => {
 });
 
 router.get('/:cubeId/details', async (req, res) => {
-    const cubeId = req.params.cubeId;
+    const cube = await cubeManager.getOneWithAccessories(req.params.cubeId).lean();
 
-    try {
-        const cube = await cubeManager.getOneWithAccessories(cubeId).lean();
+   if(!cube){
+    return res.redirect('/404');
+   }
 
-        if (!cube) {
-            return res.redirect('/404');
-        }
+   const isOwner = cube.owner?.toString() === req.user?._id;
 
-        let isOwner = false;
-
-        // Check if the user is logged in and compare user ID with cube owner ID
-        if (req.user && req.user._id) {
-            const cubeOwnerId = cube.owner && cube.owner.toString();
-            const userId = req.user._id.toString();
-
-            if (cubeOwnerId === userId) {
-                isOwner = true;
-            }
-        }
-
-        res.render('cube/details', { cube, isOwner });
-    } catch (error) {
-        console.error('Error fetching cube details:', error);
-        res.status(500).send('Internal Server Error');
-    }
+   res.render('cube/details', { cube, isOwner });
 });
 
-router.get('/:cubeId/attach-accessory',itsAuth, async (req, res) => {
+router.get('/:cubeId/attach-accessory', itsAuth, async (req, res) => {
 
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
     const accessories = await accessoriesManager.getExceptThese(cube.accessories).lean();
@@ -85,6 +68,7 @@ router.get('/:cubeId/delete', itsAuth, async (req, res) => {
 });
 
 router.post('/:cubeId/delete', itsAuth, async (req, res) => {
+
     await cubeManager.delete(req.params.cubeId);
     res.redirect('/')
 });
@@ -92,8 +76,8 @@ router.post('/:cubeId/delete', itsAuth, async (req, res) => {
 router.get('/:cubeId/edit', itsAuth, async (req, res) => {
     const cube = await cubeManager.getOne(req.params.cubeId).lean();
 
-    if (cube.owner !== req.user._id) {
-        return res.redirect('/404');
+    if (cube.owner.toString() !== req.user?._id) {
+        return res.redirect('/404')
     }
 
     const options = generateDifficultyOptions(cube.difficultyLevel);
