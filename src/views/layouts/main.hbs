@@ -25,9 +25,11 @@
                 {{/if}}
             </ul>
         </header>
+        {{#if errorMessage}}
         <div id="notifications">
-            <p id="notification-message">Error Message</p>
+            <p id="notification-message">{{errorMessage}}</p>
         </div>
+        {{/if}}
          
 
         {{{body}}}
