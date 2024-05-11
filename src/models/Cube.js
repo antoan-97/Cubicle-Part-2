@@ -2,13 +2,7 @@ const mongoose = require('mongoose');
 const Accessory = require('./Accessory');
 
 const cubeSchema = new mongoose.Schema({
-    name:{
-      type:String,
-      required: true,
-      unique: true,
-      minLength: 5,
-      match: /^[A-Za-z0-9]+$/,
-    },
+    name: String,
     description: String,
     imageUrl: String,
     difficultyLevel: Number,
