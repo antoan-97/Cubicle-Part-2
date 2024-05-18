@@ -1,2 +1,2 @@
 # softuni-Cubicle
-This is repository with MPA exercise-Cubicle from course : JS Back-End - may 2024
+"This is a repository with the MPA exercise 'Cubicle' from the course: JS Back-End - May 2024."
