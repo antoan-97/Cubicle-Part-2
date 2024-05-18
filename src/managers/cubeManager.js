@@ -27,6 +27,7 @@ exports.update = (cubeId,cubeData) => Cube.findByIdAndUpdate(cubeId,cubeData);
 exports.delete = (cubeId) => Cube.findByIdAndDelete(cubeId);
 exports.create = async (cubeData) => {
     const cube = new Cube(cubeData);
+    cube.owner = cubeData.owner
 
     await cube.save();
 

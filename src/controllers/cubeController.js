@@ -59,7 +59,8 @@ router.post('/:cubeId/attach-accessory', itsAuth, async (req, res) => {
 })
 
 router.get('/:cubeId/delete', itsAuth, async (req, res) => {
-    const cube = await cubeManager.getOne(req.params.cubeId).lean();
+    const cubeId = req.params.cubeId;
+    const cube = await cubeManager.getOne(cubeId).lean();
 
     const options = generateDifficultyOptions(cube.difficultyLevel);
 
@@ -68,9 +69,16 @@ router.get('/:cubeId/delete', itsAuth, async (req, res) => {
 });
 
 router.post('/:cubeId/delete', itsAuth, async (req, res) => {
+     
+    const cubeId = req.params.cubeId;
+    try {
+        await cubeManager.delete(cubeId);
+        res.redirect('/')
+    } catch (err) {
+        console.log(err.message);
+        res.render('cube/details', {error: 'Unsuccesful delete!'})
+    }
 
-    await cubeManager.delete(req.params.cubeId);
-    res.redirect('/')
 });
 
 router.get('/:cubeId/edit', itsAuth, async (req, res) => {
